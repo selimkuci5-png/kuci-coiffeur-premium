@@ -23,59 +23,21 @@
 <section class="section" id="kontakt"><div class="wrap"><div class="eyebrow">Na kontakto</div><h2>Gati për stilin tënd të ri?</h2><div class="contact-grid"><div class="contact-item"><h3>✆ &nbsp; Telefoni</h3><a href="tel:049880789">049 880 789</a><p>Telefono për pyetje dhe konfirmim termini.</p></div><div class="contact-item"><h3>✉ &nbsp; Email</h3><a href="mailto:selimkuci5@gmail.com">selimkuci5@gmail.com</a><p>Na shkruaj për informata.</p></div><div class="contact-item"><h3>◷ &nbsp; Orari</h3><p>Kontakto sallonin për orarin dhe disponueshmërinë e termineve.</p><a class="btn outline" href="https://wa.me/38349880789" target="_blank" rel="noopener">Hap WhatsApp →</a></div></div><div class="admin-note"><strong style="color:var(--gold2)">Paneli privat i pronarit</strong><br>Për arsye sigurie, paneli i administrimit do të shtohet si pjesë e mbrojtur server-side në fazën tjetër. Mos vendos fjalëkalime ose sekrete në këtë HTML publik.</div></div></section></main>
 <footer><div class="wrap"><div class="footmain"><a class="brand" href="#ballina"><span class="logo">✂</span><span>KUÇI-COIFFEUR<small>HAIR & BEARD STUDIO</small></span></a><div class="muted">Stili yt. Termini yt.</div><a class="btn outline" href="#rezervo">Rezervo termin →</a></div><div class="copyright"><span>© <span id="year"></span> Kuçi-Coiffeur. Të gjitha të drejtat e rezervuara.</span><span>Rezervimet konfirmohen nga salloni.</span></div></div></footer><div class="mobile-book"><a class="btn" href="#rezervo">▦ &nbsp; Rezervo Termin</a></div>
 <script>
-const svc={cut:{name:'Prerje flokësh',price:4,duration:30},beard:{name:'Rregullim i mjekrës',price:1,duration:20},style:{name:'Stilim flokësh',price:7,duration:30},combo:{name:'Prerje + mjekër',price:5,duration:45}};
-const select=document.getElementById('service');function euro(n){return n.toLocaleString('sq-AL',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}function update(){const s=svc[select.value];document.getElementById('sumService').textContent=s.name;document.getElementById('sumDuration').textContent=s.duration+' min';document.getElementById('sumPrice').textContent=euro(s.price)}select.addEventListener('change',update);document.querySelectorAll('[data-service]').forEach(b=>b.addEventListener('click',()=>{select.value=b.dataset.service;update();document.getElementById('rezervo').scrollIntoView({behavior:'smooth'})}));
-const dateInput=document.getElementById('date');const now=new Date();dateInput.min=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);document.getElementById('year').textContent=new Date().getFullYear();
-function bookingMessage(){const form=document.getElementById('bookingForm');if(!form.reportValidity())return null;const f=new FormData(form);const s=svc[f.get('service')];const msg=['Përshëndetje Kuçi-Coiffeur! Dua të kërkoj një termin:','Emri: '+f.get('name'),'Telefoni: '+f.get('phone'),'Shërbimi: '+s.name,'Kohëzgjatja: '+s.duration+' min','Data: '+f.get('date'),'Ora: '+f.get('time'),'Çmimi: '+euro(s.price),'Pagesa: '+f.get('payment'),f.get('notes')?'Shënime: '+f.get('notes'):'','Ju lutem ma konfirmoni termin.'].filter(Boolean).join('\n');return {msg:msg};}function showSendStatus(channel){const status=document.getElementById('status');status.className='status show';status.textContent='Mesazhi për '+channel+' u përgatit. Kontrolloje dhe shtype Send/Dërgo në aplikacionin që u hap. Termini pret konfirmimin e sallonit.';}document.getElementById('sendWhatsApp').addEventListener('click',()=>{const data=bookingMessage();if(!data)return;showSendStatus('WhatsApp');window.open('https://wa.me/38349880789?text='+encodeURIComponent(data.msg),'_blank','noopener');});document.getElementById('sendEmail').addEventListener('click',async()=>{
-  const data=bookingMessage();
-  if(!data)return;
-
-  const button=document.getElementById('sendEmail');
-  const form=document.getElementById('bookingForm');
-  const f=new FormData(form);
-  const s=svc[f.get('service')];
-  const status=document.getElementById('status');
-
-  button.disabled=true;
-  button.textContent='Duke dërguar…';
-  status.className='status show';
-  status.textContent='Po dërgohet kërkesa me email…';
-
-  try{
-    const response=await fetch('https://formsubmit.co/ajax/selimkuci5@gmail.com',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Accept':'application/json'
-      },
-      body:JSON.stringify({
-        name:String(f.get('name')||''),
-        phone:String(f.get('phone')||''),
-        service:s.name,
-        duration:s.duration+' min',
-        date:String(f.get('date')||''),
-        time:String(f.get('time')||''),
-        price:euro(s.price),
-        payment:String(f.get('payment')||''),
-        notes:String(f.get('notes')||'Pa shënime'),
-        _subject:'Rezervim i ri - KUÇI-COIFFEUR'
-      })
-    });
-
-    let result={};
-    try{result=await response.json();}catch(parseError){
-      throw new Error('Shërbimi i emailit ktheu një përgjigje të pavlefshme.');
-    }
-
-    if(!response.ok || result.success===false || result.success==='false'){
-      throw new Error(result.message||'Dërgimi i emailit dështoi.');
-    }
-
-    status.textContent='Kërkesa u pranua nga shërbimi i emailit. Nëse është hera e parë, kontrollo selimkuci5@gmail.com dhe konfirmo adresën nëse të kërkohet. Termini nuk është i konfirmuar derisa salloni ta konfirmojë.';
-  }catch(error){
-    status.textContent='Nuk u konfirmua dërgimi i emailit. Provo përsëri ose përdor WhatsApp. Detaje: '+error.message;
-  }finally{
-    button.disabled=false;
-    button.innerHTML='✉ &nbsp; Dërgo me Email';
-  }
-});;</script></body></html>
+const API_URL='https://holy-dust-f008.selimkuci5.workers.dev/api/bookings';
+const svc={cut:{name:'Prerje flokësh',apiName:'Prerje për meshkuj',price:4,duration:30},beard:{name:'Rregullim i mjekrës',apiName:'Rregullim i mjekrës',price:1,duration:20},style:{name:'Stilim flokësh',apiName:'Stilimi i flokëve',price:7,duration:30},combo:{name:'Prerje + mjekër',apiName:'Kombinim',price:5,duration:45}};
+const select=document.getElementById('service'),status=document.getElementById('status');
+function euro(n){return n.toLocaleString('sq-AL',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}
+function update(){const s=svc[select.value];document.getElementById('sumService').textContent=s.name;document.getElementById('sumDuration').textContent=s.duration+' min';document.getElementById('sumPrice').textContent=euro(s.price)}
+select.addEventListener('change',update);
+document.querySelectorAll('[data-service]').forEach(b=>b.addEventListener('click',()=>{select.value=b.dataset.service;update();document.getElementById('rezervo').scrollIntoView({behavior:'smooth'})}));
+const dateInput=document.getElementById('date'),now=new Date();
+dateInput.min=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);
+document.getElementById('year').textContent=new Date().getFullYear();
+function getBooking(){const form=document.getElementById('bookingForm');if(!form.reportValidity())return null;const f=new FormData(form),s=svc[f.get('service')];return {form,f,s,msg:['Përshëndetje Kuçi-Coiffeur! Dua të kërkoj një termin:','Emri: '+f.get('name'),'Telefoni: '+f.get('phone'),'Shërbimi: '+s.name,'Kohëzgjatja: '+s.duration+' min','Data: '+f.get('date'),'Ora: '+f.get('time'),'Çmimi: '+euro(s.price),'Pagesa: '+f.get('payment'),f.get('notes')?'Shënime: '+f.get('notes'):'','Ju lutem ma konfirmoni termin.'].filter(Boolean).join('\n')}}
+async function saveBooking(data){const response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name:String(data.f.get('name')||'').trim(),phone:String(data.f.get('phone')||'').trim(),service:data.s.apiName,date:String(data.f.get('date')||''),time:String(data.f.get('time')||''),notes:String(data.f.get('notes')||'').trim()})});let result={};try{result=await response.json()}catch(e){}if(!response.ok||result.success===false||result.error)throw new Error(result.message||result.error||'Serveri nuk e ruajti kërkesën (HTTP '+response.status+').');return result}
+function setStatus(message){status.className='status show';status.textContent=message}
+function setBusy(button,busy,label){button.disabled=busy;button.textContent=busy?'Duke dërguar…':label}
+const waButton=document.getElementById('sendWhatsApp'),emailButton=document.getElementById('sendEmail');
+waButton.addEventListener('click',async()=>{const data=getBooking();if(!data)return;const popup=window.open('about:blank','_blank');setBusy(waButton,true,'◉  Dërgo me WhatsApp');setStatus('Po ruhet kërkesa në databazë…');try{await saveBooking(data);setStatus('Kërkesa u ruajt në databazë si në pritje. Po hapim WhatsApp; dërgoje mesazhin dhe prit konfirmimin e sallonit.');const url='https://wa.me/38349880789?text='+encodeURIComponent(data.msg);if(popup)popup.location.href=url;else window.location.href=url}catch(error){if(popup)popup.close();setStatus('Kërkesa nuk u ruajt në databazë, prandaj WhatsApp nuk u hap. Provo përsëri ose kontakto sallonin. Detaje: '+error.message)}finally{setBusy(waButton,false,'◉  Dërgo me WhatsApp')}});
+emailButton.addEventListener('click',async()=>{const data=getBooking();if(!data)return;setBusy(emailButton,true,'Duke dërguar…');setStatus('Po ruhet kërkesa në databazë…');try{await saveBooking(data)}catch(error){setStatus('Kërkesa nuk u ruajt në databazë dhe nuk u dërgua emaili. Provo përsëri ose përdor WhatsApp. Detaje: '+error.message);setBusy(emailButton,false,'✉  Dërgo me Email');return}setStatus('Kërkesa u ruajt në databazë si në pritje. Po dërgohet emaili…');try{const response=await fetch('https://formsubmit.co/ajax/selimkuci5@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name:String(data.f.get('name')||''),phone:String(data.f.get('phone')||''),service:data.s.name,duration:data.s.duration+' min',date:String(data.f.get('date')||''),time:String(data.f.get('time')||''),price:euro(data.s.price),payment:String(data.f.get('payment')||''),notes:String(data.f.get('notes')||'Pa shënime'),_subject:'Rezervim i ri - KUÇI-COIFFEUR'})});let result={};try{result=await response.json()}catch(e){}if(!response.ok||result.success===false||result.success==='false')throw new Error(result.message||'Dërgimi i emailit dështoi.');setStatus('Kërkesa u ruajt në databazë dhe u dërgua te shërbimi i emailit. Kontrollo emailin e sallonit; nëse kërkohet, konfirmo FormSubmit. Termini mbetet në pritje derisa salloni ta konfirmojë.')}catch(error){setStatus('Kërkesa u ruajt në databazë, por emaili nuk u konfirmua. Kontrollo panelin e rezervimeve ose provo WhatsApp. Detaje: '+error.message)}finally{setBusy(emailButton,false,'✉  Dërgo me Email')}});
+</script></body></html>
